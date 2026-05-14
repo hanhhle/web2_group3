@@ -44,7 +44,7 @@ include 'includes/header.php';
     <div class="col-md-6">
         <div class="card h-100 border-info">
             <div class="card-body text-center">
-                <h3 class="card-title">👥 Quản trị Tài khoản</h3>
+                <h3 class="card-title">👥 Quản lý Tài khoản</h3>
                 <p class="card-text">Phân quyền chặt chẽ Admin, Giảng viên và Sinh viên với bảo mật mật khẩu.</p>
                 <a href="users/index.php" class="btn btn-outline-info">Truy cập ngay</a>
             </div>
