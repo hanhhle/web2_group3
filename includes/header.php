@@ -39,6 +39,9 @@ $base_url = '/WEB2_GROUP3/';
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $base_url; ?>users/index.php">👥 Tài khoản</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $base_url; ?>clos/index.php">🧩 CLOs & Mapping</a>
+                </li>
             </ul>
         </div>
     </div>
