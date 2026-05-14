@@ -30,9 +30,20 @@ class Database {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // THÊM HÀM NÀY VÀO ĐÂY: Hàm để lấy ID vừa mới INSERT thành công
     public function getLastInsertId() {
         return $this->pdo->lastInsertId();
+    }
+
+    public function beginTransaction() {
+        return $this->pdo->beginTransaction();
+    }
+
+    public function commit() {
+        return $this->pdo->commit();
+    }
+
+    public function rollBack() {
+        return $this->pdo->rollBack();
     }
 }
 ?>
