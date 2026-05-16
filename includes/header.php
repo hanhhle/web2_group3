@@ -39,9 +39,19 @@ $base_url = '/WEB2_GROUP3/';
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $base_url; ?>users/index.php">👥 Tài khoản</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $base_url; ?>clos/index.php">🧩 CLOs & Mapping</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $base_url; ?>assessments/index.php">📊 Cấu trúc Đánh giá</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $base_url; ?>enrollments/index.php">📝 Ghi danh Lớp học</a>
+                </li>
             </ul>
         </div>
     </div>
+
 </nav>
 
 <div class="container shadow-sm p-4 bg-white rounded">
