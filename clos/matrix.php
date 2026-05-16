@@ -1,6 +1,12 @@
 <?php 
+// BẬT BÁO LỖI LÊN ĐỂ BẮT BUG
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once '../classes/database.php';
 include '../includes/header.php'; 
+
+// ... (code cũ giữ nguyên ở dưới) ...
 
 $db = Database::getInstance();
 
@@ -23,14 +29,14 @@ if ($selected_program_id && $selected_subject_id) {
     
     // 3. Lấy dữ liệu Mapping cũ (nếu có) để điền sẵn vào ô Input
     $mappings_raw = $db->fetchAll("
-        SELECT clo_id, plo_id, contribution_percentage 
+        SELECT clo_id, plo_id, weight 
         FROM clo_plo_mappings 
         WHERE clo_id IN (SELECT id FROM clos WHERE subject_id = ?)
     ", [$selected_subject_id]);
     
     // Chuyển mảng phẳng thành mảng 2 chiều: array[clo_id][plo_id] = %
     foreach ($mappings_raw as $m) {
-        $existing_mappings[$m['clo_id']][$m['plo_id']] = $m['contribution_percentage'];
+        $existing_mappings[$m['clo_id']][$m['plo_id']] = $m['weight'];
     }
 }
 ?>
