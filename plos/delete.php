@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -9,9 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
         try {
             $db->query("DELETE FROM plos WHERE id = ?", [$id]);
-            $_SESSION['msg'] = "Đã xóa PLO thành công!";
+            $_SESSION['msg'] = "PLO deleted successfully!";
         } catch (PDOException $e) {
-            $_SESSION['error'] = "Không thể xóa: " . $e->getMessage();
+            $_SESSION['error'] = "Delete error: " . $e->getMessage();
         }
     }
     header("Location: index.php");

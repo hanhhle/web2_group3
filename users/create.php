@@ -1,40 +1,41 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
-    
-    $code = strtoupper(trim($_POST['code']));
-    $name = trim($_POST['name']);
-    $credits = (int)$_POST['credits'];
-    $program_ids = $_POST['program_ids'] ?? []; // Đây là mảng các ID ngành được tích chọn
 
-    if (empty($code) || empty($name) || empty($program_ids)) {
-        $_SESSION['error'] = "Vui lòng nhập đủ thông tin và chọn ít nhất 1 ngành!";
-        header("Location: index.php");
+    $username = trim($_POST['username'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $role = trim($_POST['role'] ?? 'student');
+
+    if ($username === '' || $full_name === '' || $email === '' || $password === '') {
+        $_SESSION['error'] = 'Please fill in all required fields.';
+        header('Location: index.php');
+        exit;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Please provide a valid email address.';
+        header('Location: index.php');
         exit;
     }
 
     try {
-        // Bước 1: Lưu thông tin môn học vào bảng subjects (không còn cột program_id)
-        $sql_sub = "INSERT INTO subjects (code, name, credits) VALUES (?, ?, ?)";
-        $db->query($sql_sub, [$code, $name, $credits]);
-        
-        // Lấy ID của môn học vừa tạo
-        $subject_id = $db->pdo->lastInsertId();
-
-        // Bước 2: Lặp qua mảng các ngành để lưu vào bảng trung gian
-        $sql_mapping = "INSERT INTO subject_program_mapping (subject_id, program_id) VALUES (?, ?)";
-        foreach ($program_ids as $p_id) {
-            $db->query($sql_mapping, [$subject_id, (int)$p_id]);
-        }
-
-        $_SESSION['msg'] = "Đã thêm môn học và ánh xạ vào " . count($program_ids) . " ngành thành công!";
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (username, full_name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)";
+        $db->query($sql, [$username, $full_name, $email, $password_hash, $role]);
+        $_SESSION['msg'] = 'User account created successfully!';
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi Database: " . $e->getMessage();
+        if ($e->getCode() == 23000) {
+            $_SESSION['error'] = 'A user with the same username or email already exists.';
+        } else {
+            $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+        }
     }
-    
-    header("Location: index.php");
+
+    header('Location: index.php');
     exit;
 }

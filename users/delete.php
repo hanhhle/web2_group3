@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -9,9 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
         try {
             $db->query("DELETE FROM users WHERE id = ?", [$id]);
-            $_SESSION['msg'] = "Đã xóa tài khoản thành công!";
+            $_SESSION['msg'] = "Account deleted successfully!";
         } catch (PDOException $e) {
-            $_SESSION['error'] = "Không thể xóa (tài khoản này đang chứa dữ liệu điểm số): " . $e->getMessage();
+            $_SESSION['error'] = "Unable to delete user (account has related grade data): " . $e->getMessage();
         }
     }
     header("Location: index.php");

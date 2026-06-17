@@ -23,7 +23,7 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Quản lý Học phần (Subjects)</h2>
+    <h2>Subject Management</h2>
 </div>
 
 <?php if (isset($_SESSION['msg'])): ?>
@@ -34,26 +34,26 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 <?php endif; ?>
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-header bg-warning text-dark fw-bold">Thêm Môn học mới</div>
+    <div class="card-header bg-warning text-dark fw-bold">Add New Subject</div>
     <div class="card-body">
         <form action="create.php" method="POST" class="row g-3">
             <div class="col-md-3">
-                <label class="form-label fw-bold">Mã môn (VD: INS3064)</label>
-                <input type="text" name="code" class="form-control" placeholder="Nhập mã môn" required>
+                <label class="form-label fw-bold">Subject Code (e.g. INS3064)</label>
+                <input type="text" name="code" class="form-control" placeholder="Enter subject code" required>
             </div>
             <div class="col-md-6">
-                <label class="form-label fw-bold">Tên môn học</label>
-                <input type="text" name="name" class="form-control" placeholder="Nhập tên môn học" required>
+                <label class="form-label fw-bold">Subject Name</label>
+                <input type="text" name="name" class="form-control" placeholder="Enter subject name" required>
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-bold">Số tín chỉ</label>
-                <input type="number" name="credits" class="form-control" placeholder="Nhập số tín chỉ" min="1" required>
+                <label class="form-label fw-bold">Credits</label>
+                <input type="number" name="credits" class="form-control" placeholder="Enter credits" min="1" required>
             </div>
             
             <div class="col-12 mt-3">
-                <label class="form-label fw-bold d-block">Thuộc các ngành đào tạo:</label>
+                <label class="form-label fw-bold d-block">Belongs to programs:</label>
                 <button class="btn btn-outline-secondary btn-sm mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrograms" aria-expanded="false" aria-controls="collapsePrograms">
-                    👇 Hiển thị / Ẩn danh sách ngành (Tích chọn)
+                    👇 Show / Hide Program List (Select)
                 </button>
                 
                 <div class="collapse" id="collapsePrograms">
@@ -70,12 +70,12 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <small class="text-muted fst-italic">* Có thể tích chọn nhiều ngành cùng lúc nếu đây là môn học chung.</small>
+                    <small class="text-muted fst-italic">* Multiple programs can be selected if this is a shared course.</small>
                 </div>
             </div>
 
             <div class="col-12 text-end mt-3">
-                <button type="submit" class="btn btn-warning px-5 fw-bold">Thêm Môn Học</button>
+                <button type="submit" class="btn btn-warning px-5 fw-bold">Add Subject</button>
             </div>
         </form>
     </div>
@@ -84,11 +84,11 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 <table class="table table-bordered table-hover">
     <thead class="table-dark">
         <tr>
-            <th>Mã Môn</th>
-            <th>Tên Môn</th>
-            <th>Tín chỉ</th>
-            <th>Thuộc các Chương trình</th>
-            <th style="width: 150px;">Hành động</th>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Credits</th>
+            <th>Programs</th>
+            <th style="width: 150px;">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -101,18 +101,18 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
                 <?php 
                     // Nếu môn học được tích cho TOÀN BỘ số ngành có trong DB
                     if ($row['mapped_count'] > 0 && $row['mapped_count'] == $row['total_programs_count']) {
-                        echo '<span class="badge bg-success">Tất cả các chương trình</span>';
+                        echo '<span class="badge bg-success">All Programs</span>';
                     } else {
                         // Nếu chỉ học ở 1 vài ngành thì liệt kê mã ngành ra
-                        echo htmlspecialchars($row['list_programs'] ?? 'Chưa gán ngành nào');
+                        echo htmlspecialchars($row['list_programs'] ?? 'No programs assigned');
                     }
                 ?>
             </td>
             <td>
-                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Sửa</a>
-                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa môn học này?');">
+                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this subject?');">
                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </td>
         </tr>

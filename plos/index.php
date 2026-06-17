@@ -4,19 +4,19 @@ include '../includes/header.php';
 
 $db = Database::getInstance();
 
-// Truy vấn JOIN để lấy tên chương trình đào tạo [cite: 300]
+// Query with JOIN to fetch program name for each PLO
 $sql_plos = "SELECT plos.*, programs.name as program_name 
              FROM plos 
              JOIN programs ON plos.program_id = programs.id 
              ORDER BY plos.id DESC";
 $plos = $db->fetchAll($sql_plos);
 
-// Lấy danh sách chương trình cho Menu thả xuống [cite: 280]
+// Fetch program list for the dropdown menu
 $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Chuẩn đầu ra Chương trình (PLOs)</h2>
+    <h2>Program Learning Outcomes (PLOs)</h2>
 </div>
 
 <?php if (isset($_SESSION['msg'])): ?>
@@ -27,12 +27,12 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 <?php endif; ?>
 
 <div class="card mb-4">
-    <div class="card-header bg-success text-white">Thêm chuẩn đầu ra mới</div>
+    <div class="card-header bg-success text-white">Add New PLO</div>
     <div class="card-body">
         <form action="create.php" method="POST" class="row g-3">
             <div class="col-md-3">
                 <select name="program_id" class="form-select" required>
-                    <option value="">-- Thuộc Chương trình --</option>
+                    <option value="">-- Select Program --</option>
                     <?php foreach ($programs as $prog): ?>
                         <option value="<?php echo $prog['id']; ?>">
                             <?php echo htmlspecialchars($prog['name']); ?>
@@ -41,13 +41,13 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="text" name="code" class="form-control" placeholder="Mã PLO" required>
+                <input type="text" name="code" class="form-control" placeholder="PLO Code" required>
             </div>
             <div class="col-md-5">
-                <input type="text" name="description" class="form-control" placeholder="Mô tả chuẩn đầu ra" required>
+                <input type="text" name="description" class="form-control" placeholder="PLO Description" required>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-success w-100">Thêm PLO</button>
+                <button type="submit" class="btn btn-success w-100">Add PLO</button>
             </div>
         </form>
     </div>
@@ -56,10 +56,10 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 <table class="table table-bordered">
     <thead class="table-secondary">
         <tr>
-            <th>Chương trình</th>
-            <th>Mã PLO</th>
-            <th>Mô tả chi tiết</th>
-            <th style="width: 150px;">Hành động</th>
+            <th>Program</th>
+            <th>PLO Code</th>
+            <th>Description</th>
+            <th style="width: 150px;">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -69,10 +69,10 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
             <td><strong><?php echo htmlspecialchars($row['code']); ?></strong></td>
             <td><?php echo htmlspecialchars($row['description']); ?></td>
             <td>
-                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Sửa</a>
-                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa PLO này?');">
+                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+                <form action="delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this PLO?');">
                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>
             </td>
         </tr>
