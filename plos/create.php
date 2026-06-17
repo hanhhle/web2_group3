@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -11,9 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $sql = "INSERT INTO plos (program_id, code, description) VALUES (?, ?, ?)";
         $db->query($sql, [$program_id, $code, $description]);
-        $_SESSION['msg'] = "Đã thêm PLO thành công!";
+        $_SESSION['msg'] = "PLO added successfully!";
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi Database: " . $e->getMessage();
+        $_SESSION['error'] = "Database error: " . $e->getMessage();
     }
     header("Location: index.php");
     exit;

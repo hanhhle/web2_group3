@@ -14,11 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $sql = "UPDATE plos SET program_id=?, code=?, description=? WHERE id=?";
         $db->query($sql, [$program_id, $code, $description, $id]);
-        $_SESSION['msg'] = "Cập nhật PLO thành công!";
+        $_SESSION['msg'] = "PLO updated successfully!";
         header("Location: index.php");
         exit;
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi cập nhật: " . $e->getMessage();
+        $_SESSION['error'] = "Update error: " . $e->getMessage();
         header("Location: index.php");
         exit;
     }
@@ -34,14 +34,14 @@ if (!$plo) { header("Location: index.php"); exit; }
 $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
 ?>
 
-<h2>Sửa Chuẩn đầu ra (PLO)</h2>
+<h2>Edit Program Learning Outcome (PLO)</h2>
 <div class="card mt-3">
     <div class="card-body">
         <form action="edit.php" method="POST">
             <input type="hidden" name="id" value="<?php echo $plo['id']; ?>">
             
             <div class="mb-3">
-                <label>Thuộc Chương trình</label>
+                <label>Program</label>
                 <select name="program_id" class="form-select" required>
                     <?php foreach ($programs as $prog): ?>
                         <option value="<?php echo $prog['id']; ?>" <?php echo ($prog['id'] == $plo['program_id']) ? 'selected' : ''; ?>>
@@ -51,15 +51,15 @@ $programs = $db->fetchAll("SELECT * FROM programs ORDER BY name ASC");
                 </select>
             </div>
             <div class="mb-3">
-                <label>Mã PLO</label>
+                <label>PLO Code</label>
                 <input type="text" name="code" class="form-control" value="<?php echo htmlspecialchars($plo['code']); ?>" required>
             </div>
             <div class="mb-3">
-                <label>Mô tả chi tiết</label>
+                <label>Description</label>
                 <input type="text" name="description" class="form-control" value="<?php echo htmlspecialchars($plo['description']); ?>" required>
             </div>
-            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-            <a href="index.php" class="btn btn-secondary">Hủy</a>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="index.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
