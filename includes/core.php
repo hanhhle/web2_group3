@@ -72,17 +72,7 @@ function auditLog(string $action, ?string $table=null, $recId=null, ?string $det
     } catch(Exception $e){}
 }
 
-// ── Ledger helpers ───────────────────────────────────────────
-/**
- * @param int         $eid           enrollment_id
- * @param int         $cid           criterion_id
- * @param float       $score         new score being recorded
- * @param string      $action        INSERT | UPDATE
- * @param int         $gradedBy      user who originally enters/requests the grade
- * @param float|null  $previousScore previous score (for UPDATE)
- * @param int|null    $approvedBy    admin who approved a grade-change request (null for direct entry)
- * @param int|null    $requestId     grade_change_requests.id that was approved (null for direct entry)
- */
+
 function ledgerRecord(
     int $eid,
     int $cid,
