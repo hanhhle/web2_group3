@@ -4,7 +4,7 @@ include '../includes/header.php';
 
 $db = Database::getInstance();
 
-// XỬ LÝ LƯU DỮ LIỆU (POST)
+// PROCESS SUBMISSION (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int)$_POST['id'];
     $username = trim($_POST['username']);
@@ -15,26 +15,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if (!empty($password_raw)) {
-            // Nếu có nhập pass mới -> Hash và cập nhật cả pass
+            // If a new password is entered, hash and update it as well
             $password_hashed = password_hash($password_raw, PASSWORD_DEFAULT);
             $sql = "UPDATE users SET username=?, full_name=?, email=?, role=?, password_hash=? WHERE id=?";
             $db->query($sql, [$username, $full_name, $email, $role, $password_hashed, $id]);
         } else {
-            // Nếu để trống pass -> Chỉ cập nhật thông tin khác
+            // If password is blank, only update other fields
             $sql = "UPDATE users SET username=?, full_name=?, email=?, role=? WHERE id=?";
             $db->query($sql, [$username, $full_name, $email, $role, $id]);
         }
-        $_SESSION['msg'] = "Cập nhật tài khoản thành công!";
+        $_SESSION['msg'] = "Account updated successfully!";
         header("Location: index.php");
         exit;
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi cập nhật (Có thể trùng Username/Email): " . $e->getMessage();
+        $_SESSION['error'] = "Update failed (possible duplicate username/email): " . $e->getMessage();
         header("Location: index.php");
         exit;
     }
 }
 
-// HIỂN THỊ FORM (GET)
+// DISPLAY FORM (GET)
 $id = $_GET['id'] ?? null;
 if (!$id) { header("Location: index.php"); exit; }
 
@@ -42,7 +42,7 @@ $user = $db->query("SELECT * FROM users WHERE id = ?", [$id])->fetch(PDO::FETCH_
 if (!$user) { header("Location: index.php"); exit; }
 ?>
 
-<h2>Sửa Tài khoản</h2>
+<h2>Edit Account</h2>
 <div class="card mt-3">
     <div class="card-body">
         <form action="edit.php" method="POST">
@@ -53,7 +53,7 @@ if (!$user) { header("Location: index.php"); exit; }
                 <input type="text" name="username" class="form-control" value="<?php echo htmlspecialchars($user['username']); ?>" required>
             </div>
             <div class="mb-3">
-                <label>Họ và Tên</label>
+                <label>Full Name</label>
                 <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
             </div>
             <div class="mb-3">
@@ -61,19 +61,19 @@ if (!$user) { header("Location: index.php"); exit; }
                 <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" required>
             </div>
             <div class="mb-3">
-                <label>Vai trò</label>
+                <label>Role</label>
                 <select name="role" class="form-select" required>
-                    <option value="student" <?php echo ($user['role'] == 'student') ? 'selected' : ''; ?>>Sinh viên</option>
-                    <option value="lecturer" <?php echo ($user['role'] == 'lecturer') ? 'selected' : ''; ?>>Giảng viên</option>
+                    <option value="student" <?php echo ($user['role'] == 'student') ? 'selected' : ''; ?>>Student</option>
+                    <option value="lecturer" <?php echo ($user['role'] == 'lecturer') ? 'selected' : ''; ?>>Lecturer</option>
                     <option value="admin" <?php echo ($user['role'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label>Mật khẩu mới (Để trống nếu không muốn đổi)</label>
-                <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu mới...">
+                <label>New Password (Leave blank to keep current)</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter new password...">
             </div>
-            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-            <a href="index.php" class="btn btn-secondary">Hủy</a>
+            <button type="submit" class="btn btn-success">Save changes</button>
+            <a href="index.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
