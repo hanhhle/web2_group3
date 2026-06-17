@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -11,22 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = strtoupper(preg_replace('/\s+/', '', $_POST['code'])); 
 
     if (empty($name) || empty($code)) {
-        $_SESSION['error'] = "Tên và Mã chương trình không được để trống!";
+        $_SESSION['error'] = "Program name and code cannot be empty!";
         header("Location: index.php");
         exit;
     }
 
     try {
         $sql = "INSERT INTO programs (name, code, description) VALUES (?, ?, ?)";
-        $db->query($sql, [$name, $code, $description]); // Prepared Statements chống SQL Injection
+        $db->query($sql, [$name, $code, $description]); // Prepared Statements protect against SQL Injection
 
-        $_SESSION['msg'] = "Đã thêm thành công chương trình: $code";
+        $_SESSION['msg'] = "Program added successfully: $code";
     } catch (PDOException $e) {
-        // Bắt lỗi trùng lặp Mã chương trình (Unique Key constraint)
+        // Handle duplicate program code (Unique Key constraint)
         if ($e->getCode() == 23000) {
-            $_SESSION['error'] = "Lỗi: Mã chương trình '$code' đã tồn tại trong hệ thống!";
+            $_SESSION['error'] = "Error: Program code '$code' already exists.";
         } else {
-            $_SESSION['error'] = "Lỗi Database: " . $e->getMessage();
+            $_SESSION['error'] = "Database error: " . $e->getMessage();
         }
     }
     

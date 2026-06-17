@@ -15,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "UPDATE programs SET name = ?, description = ? WHERE id = ?";
         $db->query($sql, [$name, $description, $id]);
 
-        $_SESSION['msg'] = "Cập nhật chương trình thành công!";
+        $_SESSION['msg'] = "Program updated successfully!";
         header("Location: index.php");
         exit;
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi cập nhật: " . $e->getMessage();
+        $_SESSION['error'] = "Update error: " . $e->getMessage();
         header("Location: index.php");
         exit;
     }
@@ -36,36 +36,36 @@ $stmt = $db->query("SELECT * FROM programs WHERE id = ?", [$id]);
 $program = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$program) {
-    $_SESSION['error'] = "Không tìm thấy chương trình!";
+    $_SESSION['error'] = "Program not found!";
     header("Location: index.php");
     exit;
 }
 ?>
 
-<h2>Chỉnh sửa Chương trình</h2>
+<h2>Edit Program</h2>
 <div class="card mt-3">
     <div class="card-body">
         <form action="edit.php" method="POST">
             <input type="hidden" name="id" value="<?php echo $program['id']; ?>">
             
             <div class="mb-3">
-                <label class="form-label">Mã chương trình (Code) <span class="text-danger">*</span></label>
-                <input type="text" class="form-control bg-light" value="<?php echo htmlspecialchars($program['code']); ?>" readonly title="Mã chương trình là bất biến, không thể sửa đổi!">
-                <small class="text-muted">Vì lý do an toàn toàn vẹn dữ liệu (Ledger Integrity), mã định danh không được phép thay đổi.</small>
+                <label class="form-label">Program Code <span class="text-danger">*</span></label>
+                <input type="text" class="form-control bg-light" value="<?php echo htmlspecialchars($program['code']); ?>" readonly title="Program code is immutable and cannot be changed.">
+                <small class="text-muted">For ledger integrity, the program identifier cannot be modified.</small>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Tên chương trình</label>
+                <label class="form-label">Program Name</label>
                 <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($program['name']); ?>" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Mô tả</label>
+                <label class="form-label">Description</label>
                 <textarea name="description" class="form-control"><?php echo htmlspecialchars($program['description']); ?></textarea>
             </div>
 
-            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
-            <a href="index.php" class="btn btn-secondary">Hủy</a>
+            <button type="submit" class="btn btn-success">Save changes</button>
+            <a href="index.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>

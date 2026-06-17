@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -10,9 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $sql = "DELETE FROM programs WHERE id = ?";
             $db->query($sql, [$id]);
-            $_SESSION['msg'] = "Đã xóa chương trình thành công!";
+            $_SESSION['msg'] = "Program deleted successfully!";
         } catch (PDOException $e) {
-            $_SESSION['error'] = "Không thể xóa: " . $e->getMessage();
+            $_SESSION['error'] = "Unable to delete program: " . $e->getMessage();
         }
     }
     
