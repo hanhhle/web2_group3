@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance();
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $program_ids = $_POST['program_ids'] ?? []; // Đây là mảng các ID ngành được tích chọn
 
     if (empty($code) || empty($name) || empty($program_ids)) {
-        $_SESSION['error'] = "Vui lòng nhập đủ thông tin và chọn ít nhất 1 ngành!";
+        $_SESSION['error'] = "Please fill all required fields and select at least one program!";
         header("Location: index.php");
         exit;
     }
@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->query($sql_mapping, [$subject_id, (int)$p_id]);
         }
 
-        $_SESSION['msg'] = "Đã thêm môn học và ánh xạ vào " . count($program_ids) . " ngành thành công!";
+        $_SESSION['msg'] = "Subject created and mapped to " . count($program_ids) . " programs successfully!";
     } catch (PDOException $e) {
-        $_SESSION['error'] = "Lỗi Database: " . $e->getMessage();
+        $_SESSION['error'] = "Database Error: " . $e->getMessage();
     }
     
     header("Location: index.php");

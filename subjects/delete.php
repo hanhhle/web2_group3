@@ -1,6 +1,6 @@
 <?php
 require_once '../classes/database.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Xử lý yêu cầu xóa dữ liệu (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,9 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
         try {
             $db->query("DELETE FROM subjects WHERE id = ?", [$id]);
-            $_SESSION['msg'] = "Đã xóa môn học thành công!";
+            $_SESSION['msg'] = "Subject deleted successfully!";
         } catch (PDOException $e) {
-            $_SESSION['error'] = "Không thể xóa môn học này vì đang có dữ liệu điểm (Ledger) liên quan: " . $e->getMessage();
+            $_SESSION['error'] = "Cannot delete subject because it has grade ledger history: " . $e->getMessage();
         }
     }
     header("Location: index.php");
