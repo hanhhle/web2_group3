@@ -656,3 +656,24 @@ if ($act === 'approve_grade_change') {
     header('Location: index.php?page=grade_requests'); exit;
 }
 
+// Admin rejects a grade change request
+if ($act === 'reject_grade_change') {
+    requireRole('admin');
+
+    $reqId      = (int)$_POST['request_id'];
+    $reviewNote = trim($_POST['review_note'] ?? '');
+
+    $req = qOne("SELECT id FROM grade_change_requests WHERE id=? AND status='pending'", [$reqId]);
+    if (!$req) {
+        flash('error', 'Request not found or already processed.');
+        header('Location: index.php?page=grade_requests'); exit;
+    }
+
+    qRun(
+        "UPDATE grade_change_requests SET status='rejected', reviewed_by=?, reviewed_at=NOW(), review_note=? WHERE id=?",
+        [uid(), $reviewNote ?: null, $reqId]
+    );
+    auditLog('REJECT_GRADE_CHANGE', 'grade_change_requests', $reqId, "Rejected by admin " . uid());
+    flash('success', 'Grade change request rejected.');
+    header('Location: index.php?page=grade_requests'); exit;
+}
