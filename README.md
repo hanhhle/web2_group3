@@ -57,7 +57,8 @@ define('DB_NAME', 'web2');
 (Note: The system has integrated the Auto-Migration feature in core.php, which will automatically create the notifications and grade_change_requests tables if they are not already present)
 
 ## 🌐 ACCESS THE SYSTEM
-👉 Open your browser and access: http://localhost/web2_group3-main%20final/index.php
+👉 Open your browser and access: http://localhost/web2_group3-main%20final/index.php 
+
 🔑 Default Accounts for Testing (Username / Password)
 * Admin: admin / password
 * Lecturer: lecturer1 / password
