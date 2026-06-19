@@ -1,7 +1,13 @@
 <?php
 // ── LECTURER: RUBRICS ────────────────────────────────────────
-function pageRUBRICS(): void {
-    requireRole('admin','lecturer');
+function pageRUBRICS(
+    array $assessments = [],
+    int $filterAid = 0,
+    ?array $selAssess = null,
+    array $rubrics = [],
+    array $clos = []
+): void {
+    requirePermission('manage_rubrics');
     layoutStart();
     
     // Hệ thống CSS Quản trị Rubric & Tiêu chí Cao cấp
@@ -131,25 +137,7 @@ function pageRUBRICS(): void {
         .action-link-premium button { background: none; border: none; color: inherit; padding: 0; cursor: pointer; display: flex; align-items: center; font: inherit; }
     </style>";
 
-    $u = uid();
-    if (role() === 'admin') {
-        $assessments = qAll("SELECT a.*, s.code as sc FROM assessments a JOIN subjects s ON a.subject_id=s.id ORDER BY a.created_at DESC");
-    } else {
-        $assessments = qAll("SELECT a.*, s.code as sc FROM assessments a JOIN subjects s ON a.subject_id=s.id WHERE a.lecturer_id=? ORDER BY a.created_at DESC", [$u]);
-    }
-    
-    $filterAid = isset($_GET['assessment_id']) ? (int)$_GET['assessment_id'] : 0;
-    if ($filterAid === 0 && !empty($assessments)) {
-        $filterAid = (int)$assessments[0]['id'];
-    }
-
-    $selAssess = null;
-    foreach ($assessments as $a) {
-        if ((int)$a['id'] === $filterAid) {
-            $selAssess = $a; break;
-        }
-    }
-
+    $isAdmin = (role() === 'admin');
     // ── BIỂU MẪU LỌC (Console Filter) ──
     echo "<div class='academic-filter-card'>";
     echo "<div class='row align-items-end'>";
@@ -184,12 +172,8 @@ function pageRUBRICS(): void {
     echo "<div class='col-md-4'><button type='submit' class='btn btn-info text-white w-100 fw-bold py-2 rounded-3 shadow-sm'><i class='bi bi-plus-lg me-2'></i>Define Rubric</button></div>";
     echo "</form></div></div>";
 
-    // ── TRUY VẤN RUBRIC & TIÊU CHÍ ──
-    $rubrics = qAll("SELECT * FROM rubrics WHERE assessment_id=? ORDER BY id", [$filterAid]);
-    $clos = qAll("SELECT * FROM clos WHERE subject_id=? ORDER BY code", [$selAssess['subject_id']]);
-
     foreach ($rubrics as $rubric) {
-        $criteria = qAll("SELECT rc.*, c.code as clo_code FROM rubric_criteria rc LEFT JOIN clos c ON rc.clo_id=c.id WHERE rc.rubric_id=? ORDER BY rc.id", [$rubric['id']]);
+        $criteria = RubricModel::getCriteriaForRubric((int)$rubric['id']);
         
         echo "<div class='rubric-master-card'>";
         
