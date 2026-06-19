@@ -59,9 +59,9 @@ define('DB_NAME', 'web2');
 ## 🌐 ACCESS THE SYSTEM
 👉 Open your browser and access: http://localhost/web2_group3-main%20final/index.php
 🔑 Default Accounts for Testing (Username / Password)
-Admin: admin / password
-Lecturer: lecturer1 / password
-Student: student1 / password
+* Admin: admin / password
+* Lecturer: lecturer1 / password
+* Student: student1 / password
 
 (The default password may differ depending on the group's SQL dump file. If you cannot log in, go to phpMyAdmin, create an MD5/Bcrypt string, and paste it directly into the password column of the users table).
 
