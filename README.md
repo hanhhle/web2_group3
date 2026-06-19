@@ -1,4 +1,4 @@
-# 🎓 VNU-IS Secure Grading System (Hệ thống Quản lý Điểm số Bảo mật)
+# 🎓 VNU-IS Secure Grading System
 
 The University Grade Management System project is built on the **Root Front-Controller MVC** architecture, incorporating **Blockchain Ledger** security mechanisms, **Strategy Pattern**, and **AJAX REST API** for a zero-reload user experience.
 
@@ -71,4 +71,4 @@ Student: student1 / password
 3. Strategy Pattern: Applying Design Patterns for flexible grading (Physical Education uses a Pass/Fail system, specialized subjects use a standard weighting system).
 4. RBAC Middleware: Highly stringent role-based access control (Admin, Lecturer, Student). Filters all requests to prevent SQL Injection and CSRF attacks.
 
-# The project is developed by Group 3.
+<sub> The project is developed by Group 3. <sub>
